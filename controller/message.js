@@ -48,6 +48,16 @@ exports.getAllMessage = asyncHandler(async (req, res, next) => {
     body: { items: message, total: message.length, pagination },
   });
 });
+exports.getMessage = asyncHandler(async (req, res, next) => {
+  let message = await req.db.messages.findByPk(req.params.id);
+  if (!message) {
+    throw new MyError(`${req.params.id} id тэй аялалын мэдээлэл олдсонгүй`);
+  }
+  res.status(200).json({
+    message: "",
+    body: { message},
+  });
+});
 
 exports.removeMessage = asyncHandler(async (req, res, next) => {
   let message = await req.db.messages.findByPk(req.params.id);

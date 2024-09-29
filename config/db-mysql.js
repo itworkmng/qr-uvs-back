@@ -29,6 +29,8 @@ const models = [
   require("../models/category"),
   require("../models/travel"),
   require("../models/message"),
+  require("../models/about"),
+  require("../models/contact"),
 ];
 
 models.forEach((model) => {

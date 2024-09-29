@@ -21,6 +21,7 @@ const successRoutes = require("./routes/success");
 const categoryRoutes = require("./routes/category");
 const messageRoutes = require("./routes/message");
 const travelRoutes = require("./routes/travel");
+const aboutRoutes= require("./routes/about")
 const injectDb = require("./middleware/injectDb");
 
 // Аппын тохиргоог process.env рүү ачаалах
@@ -70,6 +71,7 @@ app.use("/api/v1/user", usersRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/travel", travelRoutes);
 app.use("/api/v1/msg", messageRoutes);
+app.use("/api/v1/about", aboutRoutes);
 app.use(express.static("public"));
 app.use(errorHandler);
 // db.category.hasMany(db.travel, { onDelete: "CASCADE", hooks: true });
