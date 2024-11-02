@@ -27,7 +27,6 @@ module.exports = function (sequelize, DataTypes) {
       },
       images: {
         type: DataTypes.JSON,
-        allowNull: false,
       },
       categoryId: {
         type: DataTypes.INTEGER,

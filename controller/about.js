@@ -1,4 +1,5 @@
 const asyncHandler = require("../middleware/asyncHandle");
+const MyError = require("../utils/myError");
 
 exports.update = asyncHandler(async (req, res, next) => {
     let about = await req.db.about.findByPk(1);
@@ -25,7 +26,7 @@ exports.update = asyncHandler(async (req, res, next) => {
 exports.getAbout = asyncHandler(async (req, res, next) => {
   let about = await req.db.about.findByPk(1);
   if (!about) {
-    throw new MyError(`${req.params.id} id тэй мэдээлэл олдсонгүй`);
+    throw new MyError(`Мэдээлэл олдсонгүй`);
   }
   res.status(200).json({
     message: "",
