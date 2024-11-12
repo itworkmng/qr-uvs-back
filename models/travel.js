@@ -21,13 +21,6 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      content: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      images: {
-        type: DataTypes.JSON,
-      },
       categoryId: {
         type: DataTypes.INTEGER,
         allowNull: false,

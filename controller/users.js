@@ -86,7 +86,7 @@ exports.signin = asyncHandler(async (req, res, next) => {
     body: { token: user.getJsonWebToken(), user: user },
   });
 });
-exports.signup = asyncHandler(async (req, res, next) => {
+exports.signup = asyncHandler(async (req, res) => {
   const user = await req.db.users.create({ ...req.body });
   if (!user) {
     throw new MyError("Бүртгэж чадсангүй");

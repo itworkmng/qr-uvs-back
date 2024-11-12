@@ -2,18 +2,37 @@ const asyncHandler = require("../middleware/asyncHandle");
 const MyError = require("../utils/myError");
 const paginate = require("../utils/paginate-sequelize");
 exports.create = asyncHandler(async (req, res, next) => {
-  await req.db.travel.create(req.body);
+  if (!req.body.contents || req.body.contents.length <= 0) {
+    throw new MyError(`Контент байхгүй байна.`, 400);
+  }
+  const travel = await req.db.travel.create(req.body);
+  await req.body.contents.forEach(async (content) => {
+    await req.db.content.create({ ...content, travelId: travel.id });
+  });
   res.status(200).json({
     message: "",
     body: { success: true },
   });
 });
-exports.update = asyncHandler(async (req, res, next) => {
+exports.updateTravel = asyncHandler(async (req, res, next) => {
   await req.db.travel.update(req.body, {
     where: {
       id: req.params.id,
     },
   });
+
+  // travel in contents remove
+  let findcontent = await req.db.content.findAll({
+    where: { travelId: req.params.id },
+  });
+  for (const content of findcontent) {
+    await content.destroy();
+  }
+  // travel in contents insert
+  await req.body.contents.forEach(async (content) => {
+    await req.db.content.create({ ...content, travelId: req.params.id });
+  });
+
   res.status(200).json({
     message: "",
     body: { success: true },
@@ -66,7 +85,14 @@ exports.getTravels = asyncHandler(async (req, res, next) => {
       ]);
   }
 
-  const travel = await req.db.travel.findAll(query);
+  const travel = await req.db.travel.findAll({
+    ...query,
+    include: [
+      {
+        model: req.db.content,
+      },
+    ],
+  });
 
   res.status(200).json({
     message: "",
@@ -74,7 +100,11 @@ exports.getTravels = asyncHandler(async (req, res, next) => {
   });
 });
 exports.getTravel = asyncHandler(async (req, res, next) => {
-  let travel = await req.db.travel.findByPk(req.params.id);
+  let travel = await req.db.travel.findByPk(req.params.id, {
+    include: {
+      model: req.db.content,
+    },
+  });
   if (!travel) {
     throw new MyError(`${req.params.id} id тэй аялалын мэдээлэл олдсонгүй`);
   }

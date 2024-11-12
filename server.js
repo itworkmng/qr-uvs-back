@@ -80,6 +80,10 @@ app.use(errorHandler);
 db.category.hasMany(db.travel, { foreignKey: "categoryId" });
 db.travel.belongsTo(db.category, { foreignKey: "categoryId" });
 
+
+db.travel.hasMany(db.content, { foreignKey: "travelId",onDelete: "CASCADE", hooks: true  });
+db.content.belongsTo(db.travel, { foreignKey: "travelId" });
+
 db.sequelize
   .sync()
   .then((result) => {
@@ -93,7 +97,7 @@ const server = app.listen(
 );
 
 process.on("unhandledRejection", (err, promise) => {
-  console.log(`Алдаа гарлаа : ${err.message}`.underline.red.bold);
+  console.log(`Алдаа гарлаа : ${err.message}`.underline.yellow.bold);
   server.close(() => {
     process.exit(1);
   });

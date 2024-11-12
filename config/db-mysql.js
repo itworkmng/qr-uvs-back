@@ -28,6 +28,7 @@ const models = [
   require("../models/users"),
   require("../models/category"),
   require("../models/travel"),
+  require("../models/content"),
   require("../models/message"),
   require("../models/about"),
   require("../models/contact"),

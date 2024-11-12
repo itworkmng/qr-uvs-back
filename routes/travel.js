@@ -6,15 +6,15 @@ const {
   create,
   getTravels,
   removeTravel,
-  update,
+  updateTravel,
   getTravel,
 } = require("../controller/travel");
 
-//"/api/v1/category"
+//"/api/v1/travel"
 router.route("/").post(protect, create).get(getTravels);
 router
   .route("/:id")
   .delete(protect, removeTravel)
-  .put(protect, update)
+  .put(protect, updateTravel)
   .get(getTravel);
 module.exports = router;
