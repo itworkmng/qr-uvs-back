@@ -22,6 +22,7 @@ const categoryRoutes = require("./routes/category");
 const messageRoutes = require("./routes/message");
 const travelRoutes = require("./routes/travel");
 const aboutRoutes= require("./routes/about")
+const menuRoutes = require("./routes/menu")
 const injectDb = require("./middleware/injectDb");
 
 // Аппын тохиргоог process.env рүү ачаалах
@@ -72,6 +73,7 @@ app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/travel", travelRoutes);
 app.use("/api/v1/msg", messageRoutes);
 app.use("/api/v1/about", aboutRoutes);
+app.use("/api/v1/menu", menuRoutes);
 app.use(express.static("public"));
 app.use(errorHandler);
 // db.category.hasMany(db.travel, { onDelete: "CASCADE", hooks: true });
@@ -83,6 +85,13 @@ db.travel.belongsTo(db.category, { foreignKey: "categoryId" });
 
 db.travel.hasMany(db.content, { foreignKey: "travelId",onDelete: "CASCADE", hooks: true  });
 db.content.belongsTo(db.travel, { foreignKey: "travelId" });
+
+db.menu.hasMany(db.menu_category, { foreignKey: "menuId",onDelete: "CASCADE", hooks: true });
+db.menu_category.belongsTo(db.menu, { foreignKey: "menuId" });
+
+// MenuCategory and Category association
+db.menu_category.belongsTo(db.category, { foreignKey: "categoryId",onDelete: "CASCADE", hooks: false });
+db.category.hasMany(db.menu_category, { foreignKey: "categoryId" });
 
 db.sequelize
   .sync()

@@ -27,6 +27,8 @@ const sequelize = new Sequelize(
 const models = [
   require("../models/users"),
   require("../models/category"),
+  require("../models/menu"),
+  require("../models/menuCategory"),
   require("../models/travel"),
   require("../models/content"),
   require("../models/message"),

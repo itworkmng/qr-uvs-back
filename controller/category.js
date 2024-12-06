@@ -1,4 +1,3 @@
-const { Sequelize } = require("sequelize");
 const asyncHandler = require("../middleware/asyncHandle");
 const MyError = require("../utils/myError");
 const paginate = require("../utils/paginate-sequelize");

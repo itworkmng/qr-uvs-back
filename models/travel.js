@@ -21,6 +21,32 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      is_social: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      website: {
+        type: DataTypes.STRING,
+      },
+      facebook: {
+        type: DataTypes.STRING,
+      },
+      twitter: {
+        type: DataTypes.STRING,
+      },
+      youtube: {
+        type: DataTypes.STRING,
+      },
+      instagram: {
+        type: DataTypes.STRING,
+      },
+      is_location: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      location: {
+        type: DataTypes.STRING,
+      },
       categoryId: {
         type: DataTypes.INTEGER,
         allowNull: false,

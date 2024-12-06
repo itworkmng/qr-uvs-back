@@ -68,7 +68,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 exports.signin = asyncHandler(async (req, res, next) => {
   const { phone, password } = req.body;
   if (!phone || !password) {
-    throw new MyError("Имейл эсвэл нууц үгээ оруулна уу", 400);
+    throw new MyError("Утас эсвэл нууц үгээ оруулна уу", 400);
   }
   const user = await req.db.users.findOne({
     where: { phone_number: phone},
