@@ -6,6 +6,6 @@ const { newMenu, getMenu, getMenus, removeMenu, updateMenu, getActiveMenu } = re
 
 //"/api/v1"
 router.route("/").post(protect, newMenu).get(protect, getMenus);
-router.route("/active").get(protect, getActiveMenu);
+router.route("/active").get(getActiveMenu);
 router.route("/:id").get(protect, getMenu).delete(protect, removeMenu).put(protect, updateMenu);
 module.exports = router;
