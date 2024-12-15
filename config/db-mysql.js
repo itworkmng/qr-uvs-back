@@ -33,6 +33,7 @@ const models = [
   require("../models/content"),
   require("../models/message"),
   require("../models/about"),
+  require("../models/about_item"),
   require("../models/contact"),
 ];
 

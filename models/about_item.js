@@ -1,7 +1,7 @@
 /* jshint indent: 1 */
 module.exports = function (sequelize, DataTypes) {
-    const Content = sequelize.define(
-      "content",
+    const AboutItem = sequelize.define(
+      "about_item",
       {
         id: {
           type: DataTypes.INTEGER,
@@ -13,24 +13,16 @@ module.exports = function (sequelize, DataTypes) {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        image: {
+        thumbnail: {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        travelId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: "travel",
-            key: "id",
-          },
-        },
       },
       {
-        tableName: "content",
+        tableName: "about_item",
         timestamps: true,
       }
     );
-    return Content;
+    return AboutItem;
   };
   

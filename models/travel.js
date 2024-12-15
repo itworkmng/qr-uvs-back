@@ -40,9 +40,6 @@ module.exports = function (sequelize, DataTypes) {
       instagram: {
         type: DataTypes.STRING,
       },
-      phone: {//uuniig hereg garval ashigln
-        type: DataTypes.STRING,
-      },
       is_location: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

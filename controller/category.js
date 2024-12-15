@@ -32,7 +32,7 @@ exports.removeCategory = asyncHandler(async (req, res, next) => {
 });
 exports.getCategories = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  const limit = parseInt(req.query.limit) || 1000;
   const sort = req.query.sort;
   let select = req.query.select;
 
@@ -100,7 +100,6 @@ exports.getCategory = asyncHandler(async (req, res, next) => {
   let category = await req.db.category.findByPk(req.params.id);
   res.status(200).json({
     message: "",
-
     body: { category },
   });
 });

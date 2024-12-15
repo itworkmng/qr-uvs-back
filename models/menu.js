@@ -16,6 +16,9 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
       },
+      custom_url:{
+        type: DataTypes.STRING,
+      }
     },
     {
       tableName: "menu",

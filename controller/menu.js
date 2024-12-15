@@ -1,27 +1,32 @@
-const { query } = require("express");
 const asyncHandler = require("../middleware/asyncHandle");
 const MyError = require("../utils/myError");
 
 exports.newMenu = asyncHandler(async (req, res, next) => {
-  const { menu, is_active, categories } = req.body;
-  if (!categories) {
+  const { menu, is_active, categories, custom_url } = req.body;
+  if (!categories && !custom_url) {
     throw new MyError(`ангилал оруулаагүй хоосон байхгүй байна`, 400);
   } else if (!menu) {
     throw new MyError(`менью хоосон байна`, 400);
   }
-  const newmenu = await req.db.menu.create({ name: menu, is_active });
-  const MenuCategoryCollection = await Promise.all(
-    categories?.map(async (categoryId) => {
-      return await req.db.menu_category.create({
-        menuId: newmenu.id,
-        categoryId: categoryId,
-      });
-    })
-  );
+  const newmenu = await req.db.menu.create({
+    name: menu,
+    is_active,
+    custom_url,
+  });
+  if (!custom_url) {
+    await Promise.all(
+      categories?.map(async (categoryId) => {
+        return await req.db.menu_category.create({
+          menuId: newmenu.id,
+          categoryId: categoryId,
+        });
+      })
+    );
+  }
 
   res.status(200).json({
     message: "",
-    body: { success: true, menu: MenuCategoryCollection },
+    body: { success: true },
   });
 });
 exports.getMenus = asyncHandler(async (req, res, next) => {
@@ -47,6 +52,7 @@ exports.getMenus = asyncHandler(async (req, res, next) => {
       return {
         id: menu.id,
         name: menu.name,
+        custom_url:menu.custom_url,
         is_active: menu.is_active,
         categories: menuCollection.map((item) => ({
           id: item.category?.id || null,
@@ -63,9 +69,11 @@ exports.getMenus = asyncHandler(async (req, res, next) => {
   });
 });
 exports.getActiveMenu = asyncHandler(async (req, res, next) => {
-  const menus = await req.db.menu.findAll({where:{
-    is_active:true
-  }});
+  const menus = await req.db.menu.findAll({
+    where: {
+      is_active: true,
+    },
+  });
 
   // Map and resolve promises for each menu
   const groupedMenus = await Promise.all(
@@ -88,6 +96,7 @@ exports.getActiveMenu = asyncHandler(async (req, res, next) => {
         id: menu.id,
         name: menu.name,
         is_active: menu.is_active,
+        custom_url: menu.custom_url,
         categories: menuCollection.map((item) => ({
           id: item.category?.id || null,
           name: item.category?.name || null,
@@ -108,7 +117,7 @@ exports.getMenu = asyncHandler(async (req, res, next) => {
     include: [
       {
         model: req.db.menu,
-        attributes: ["id", "name", "is_active"],
+        attributes: ["id", "name", "is_active", "custom_url"],
       },
       {
         model: req.db.category,
@@ -119,10 +128,21 @@ exports.getMenu = asyncHandler(async (req, res, next) => {
       menuId: req.params.id, // Replace with the desired menu ID
     },
   });
+  if (menuWithCategories.length<=0) {
+    const menu = await req.db.menu.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
 
-  // Throw error if menu not found
-  if (!menuWithCategories.length) {
-    throw new MyError(`Menu with ID ${req.params.id} not found`, 404);
+    // Throw error if menu not found
+    if (!menu) {
+      throw new MyError(`Menu with ID ${req.params.id} not found`, 404);
+    }
+    return res.json({
+      success: true,
+      menu,
+    });
   }
 
   // Restructure the result
@@ -133,6 +153,7 @@ exports.getMenu = asyncHandler(async (req, res, next) => {
         acc.menu = {
           id: current.menu.id,
           name: current.menu.name,
+          custom_url: current.menu.custom_url,
           is_active: current.menu.is_active,
         };
       }
@@ -176,24 +197,26 @@ exports.updateMenu = asyncHandler(async (req, res, next) => {
 
   await findmenu.destroy();
 
-  const { menu, is_active, categories } = req.body;
+  const { menu, is_active, categories, custom_url } = req.body;
   if (!categories) {
     throw new MyError(`ангилал оруулаагүй хоосон байхгүй байна`, 400);
   } else if (!menu) {
     throw new MyError(`менью хоосон байна`, 400);
   }
   const newmenu = await req.db.menu.create({ name: menu, is_active });
-  const MenuCategoryCollection = await Promise.all(
-    categories?.map(async (categoryId) => {
-      return await req.db.menu_category.create({
-        menuId: newmenu.id,
-        categoryId: categoryId,
-      });
-    })
-  );
+  if (!custom_url) {
+    await Promise.all(
+      categories?.map(async (categoryId) => {
+        return await req.db.menu_category.create({
+          menuId: newmenu.id,
+          categoryId: categoryId,
+        });
+      })
+    );
+  }
 
   res.status(200).json({
     message: "",
-    body: { success: true, menu: MenuCategoryCollection },
+    body: { success: true },
   });
 });
